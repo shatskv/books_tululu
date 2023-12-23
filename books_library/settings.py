@@ -72,9 +72,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "books_library.wsgi.application"
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+BOOKS_DIR = os.path.join(BASE_DIR, 'books_downloads')
 
 DATABASES = {
     "default": {
