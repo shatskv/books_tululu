@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from books.management.commands.tululu import (check_for_redirect,
+from books.management.commands._tululu import (check_for_redirect,
                                               check_response, download_image,
                                               download_txt, parse_book_page)
 

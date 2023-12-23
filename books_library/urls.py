@@ -16,7 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from books.views import books_view, authors_view, books_by_author_view
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('books/', books_view),
+    path('authors/', authors_view),
+    path('authors/<int:author_id>', books_by_author_view, name='authors')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )
+    # urlpatterns += patterns('',
+    #     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+    #     'document_root': settings.MEDIA_ROOT}))

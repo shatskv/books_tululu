@@ -65,7 +65,7 @@ def load_books(apps, schema_editor):
         
 class Migration(migrations.Migration):
     dependencies = [
-        ("books", "0002_book_cover_alter_author_birthdate_and_more"),
+        ("books", "0001_initial"),
     ]
 
     operations = [migrations.RunPython(load_books)]
