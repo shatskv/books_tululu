@@ -22,28 +22,25 @@
         <div class="collapse navbar-collapse" id="navbarScroll">
           <ul class="navbar-nav mr-auto my-2 my-lg-0 navbar-nav-scroll" style="max-height: 100px;">
             <li class="nav-item active">
-              <a class="nav-link" href="{{ '/authors/' }}">Авторы <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{{ '/authors/' }}">Авторы<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ '/genres/' }}">Жанры<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-                Link
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ '/search_details/' }}">Поиск<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link disabled">Link</a>
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ '/update_book/' }}">Изменить<span class="sr-only">(current)</span></a>
             </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ '/new_book/' }}">Создать<span class="sr-only">(current)</span></a>
+            </li>
+            
           </ul>
-          <form class="d-flex">
-            <input class="form-control mr-2" type="search" placeholder="Поиск" aria-label="Search">
+          <form method="post" action="/search/" class="d-flex">
+            {% csrf_token %}
+            <input class="form-control mr-2" type="search" placeholder="Поиск" aria-label="Search" name="search_field">
             <button class="btn btn-outline-success" type="submit">Поиск</button>
           </form>
         </div>
@@ -53,9 +50,10 @@
     <div class="container">
       <h2 style="text-align: center;">{{ block_name }}</h2>
     </div>
-
-    {% block paginator %}
-    {% endblock paginator %}
+    {% if page.paginator.num_pages > 1 %}
+      {% block paginator %}
+      {% endblock paginator %}
+    {% endif %}
 
     {% block content %}
       <div class="container">
@@ -66,18 +64,21 @@
                 <div class="card mb-3" style="max-width: 540px;">
                   <div class="row no-gutters">
                     <div class="col-md-4">
-                      <img src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
+                      <a href="{% url 'books' book_id=book.pk %}">
+                        <img src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
+                      </a>
                     </div>
                     <div class="col-md-8">
                       <div class="card-body">
                         <h5 class="card-title">{{ book.title }}</h5>
                         <p class="card-text">{{ book.author.fullname }}</p>
                         {% for genre in book.genres.all %}
-                          <span class="badge badge-secondary">{{ genre.name }}</span>
+                          <a href="{% url 'genres' genre_id=genre.pk %}"class="badge badge-secondary">{{ genre.name }}</a>
                         {% endfor %}
-                        <div class="pt-3">
+                        <br><br>
+                        <p><ins>Рейтинг {{ book.rating }}</ins></p>
+                        <div class="pt-1">
                           <a href="{{ book.text.url }}" target="_blank">Читать онлайн</a>
-                        </div>
                       </div>
                     </div>
                   </div>

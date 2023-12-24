@@ -1,0 +1,39 @@
+{% extends 'books.html' %}
+
+{% block content %}
+	<div class="container">
+		<div class="card mb-3" style="width:75%; margin:auto;">
+			<div class="row no-gutters">
+				<div class="col-md-4">
+					<a href="{% url 'books' book_id=book.pk %}">
+						<img src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
+					</a>
+				</div>
+				<div class="col-md-8">
+					<div class="card-body">
+
+						<h5 class="card-title">Название: {{ book.title }}</h5>
+
+
+						<div class="row">
+							<div class="col-md-3">Жанры:</div>
+							
+							<div class="col-md-9" style="text-align: left;">
+								{% for genre in book.genres.all %}
+									<a href="{% url 'genres' genre_id=genre.pk %}"class="badge badge-secondary">{{ genre.name }}</a>
+								{% endfor %}
+							</div>
+
+						</div>
+						<br>
+						<p><ins>Рейтинг: {{ book.rating }}</ins></p>
+						<p class="card-text">{{ book.description }}</p>
+						<div class="pt-1">
+							<a href="{{ book.text.url }}" target="_blank">Читать онлайн</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

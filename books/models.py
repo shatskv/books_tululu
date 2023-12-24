@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Author(models.Model):
-    fullname = models.CharField(max_length=256, unique=True, db_index=True)
+    fullname = models.CharField(max_length=256, db_index=True)
     birthdate = models.DateField(null=True, blank=True)
 
     def __str__(self):

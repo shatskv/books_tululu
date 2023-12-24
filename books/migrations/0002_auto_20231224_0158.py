@@ -50,7 +50,9 @@ def load_books(apps, schema_editor):
         rating = randint(30, 100) / 10
         birtdate, year = generate_birhdate_and_year_published()
 
-        author = Author.objects.get_or_create(fullname=author_name, birthdate=birtdate)[0]
+        author = Author.objects.get_or_create(fullname=author_name)[0]
+        author.birthdate = birtdate
+        author.save()
         genres = [Genre.objects.get_or_create(name=genre_name)[0] for genre_name in genre_names]
         
         with open(img_src, 'rb') as img_file, open(book_path, 'rb') as txt_file:
