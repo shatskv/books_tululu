@@ -12,8 +12,8 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from books.management.commands._tululu import (check_for_redirect,
-                                              check_response, download_image,
-                                              download_txt, parse_book_page)
+                                               check_response, download_image,
+                                               download_txt, parse_book_page)
 
 logger = logging.getLogger('tululu')
 JSON_PATH = 'books.json'
@@ -32,11 +32,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         help = 'Задайте диапазон страниц для скачивания книг:'
         parser.add_argument('-s', '--start_page', help="Начальная страница", type=int, default=1)
-        parser.add_argument('-e', '--end_page', help="Конечная страница", type=int)
-        # parser.add_argument('-df', '--dest_folder', help="Путь каталога для сохранения книг", default='')
+        parser.add_argument('-e', '--end_page', help="Конечная страница", type=int, default=10)
         parser.add_argument('-si', '--skip_imgs', help="Не загружать обложки книг", action='store_true')
         parser.add_argument('-st', '--skip_txt', help="Не загружать тексты книг", action='store_true')
-        # parser.add_argument('-jp', '--json_path', help="Путь файла json для сохранения данных о книгах", default='books.json')    
     
     def handle(self, *args: Any, **options: Any) -> str | None:
         terminal_args = parse_terminal_args(options)
@@ -123,11 +121,15 @@ def fetch_fantastic_books(start_page=1, end_page=None, dest_folder=settings.BOOK
         except requests.HTTPError as e:
             logger.error(f'HTTP error while download book files: {e}')
             continue
+        except requests.ReadTimeout as e:
+            logger.error(f'Read timeout error : {e}')
+            continue
         book = {
             'title': book_parsed['name'],
             'author': book_parsed['author'],
             'img_src': img_path,
             'book_path': book_path, 
+            'description': book_parsed['description'],
             'comments': book_parsed['comments'],
             'genres': book_parsed['genres']
         }
@@ -137,12 +139,3 @@ def fetch_fantastic_books(start_page=1, end_page=None, dest_folder=settings.BOOK
         json_path = os.path.join(dest_folder, json_path)
     with open(json_path, 'w', encoding='utf-8') as file:
         json.dump(books, file, indent=4, ensure_ascii=False)
-
-
-# def main():
-#     terminal_args = parse_args_from_terminal()
-#     fetch_fantastic_books(**terminal_args)
-
-
-# if __name__ == '__main__':
-#     main()

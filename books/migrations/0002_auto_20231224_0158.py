@@ -41,6 +41,7 @@ def load_books(apps, schema_editor):
     for book in books_json:
         title = book.get('title')
         author_name = book.get('author')
+        description = book.get('description')
         img_src = book.get('img_src')
         book_path = book.get('book_path')
         genre_names = book.get('genres')
@@ -59,6 +60,7 @@ def load_books(apps, schema_editor):
             book_obj = Book.objects.get_or_create(
                 title=title,
                 author=author,
+                description=description,
                 cover=File(img_file, image_name),
                 text=File(txt_file, text_name),
                 year_published=year,

@@ -65,7 +65,10 @@ def parse_book_page(book_html):
 
     selector = "a[href^='/txt.php']"
     book_href = page_soup.select_one(selector)
-    
+
+    selector = "#content table.d_book" 
+    description = page_soup.select(selector)[1].get_text()
+
     selector = ".bookimage img[src]"
     image_route = page_soup.select_one(selector).get('src')
 
@@ -85,7 +88,8 @@ def parse_book_page(book_html):
     return {'name': name,
             'author': author, 
             'book_route': book_route,
-            'image_route': image_route, 
+            'image_route': image_route,
+            'description': description, 
             'comments': comments,
             'genres': genres}
 

@@ -1,0 +1,32 @@
+{% extends 'books.html' %}
+{% load static %}
+{% block content %}
+	<div class="container">
+		<div class="card mb-3" style="width:95%; margin:auto;">
+			<div class="row no-gutters">
+				<div class="col-md-4">
+					<a href="{% url 'books' book_id=book.pk %}">
+						{% if book.cover %}
+							<img src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
+						{% else %}
+						<img src="{% static 'default_cover.jpeg' %}" class="card-img" alt="Оболожка книги">
+						{% endif %}
+					</a>
+				</div>
+				<div class="col-md-8">
+					<div class="card-body">
+						
+						<form method="post" enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="form-group">
+								{{ form.as_p }}
+								<button type="submit" class="btn btn-outline-primary">Сохранить</button>
+							</div>
+						</form>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

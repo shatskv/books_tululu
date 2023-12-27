@@ -81,12 +81,21 @@ MEDIA_URL = '/media/'
 
 BOOKS_DIR = os.path.join(BASE_DIR, 'books_downloads')
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql_psycopg2',
+           'NAME': 'ysach',
+           'USER': 'postgres',
+           'HOST': 'localhost',
+       }
+   }
 
 
 # Password validation

@@ -62,7 +62,8 @@ class Migration(migrations.Migration):
                     "cover",
                     models.ImageField(blank=True, null=True, upload_to="covers/"),
                 ),
-                ("rating", models.FloatField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, max_length=5000, null=True)),
+                ("rating", models.FloatField(blank=True, null=True, default=0)),
                 (
                     "year_published",
                     models.PositiveSmallIntegerField(blank=True, null=True),

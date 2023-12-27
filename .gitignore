@@ -160,4 +160,5 @@ cython_debug/
 #.idea/
 media/
 *.log.[0-9]*
-
+logs/
+books_downloads/

@@ -11,7 +11,8 @@
 		<link rel="shortcut icon" href="{% static 'favicon.ico' %}">
     <title>Библиотека книг</title>
   </head>
-  <body>
+  
+  <header class="header_area">
     <br>
     <div class="container">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -28,15 +29,11 @@
               <a class="nav-link" href="{{ '/genres/' }}">Жанры<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="{{ '/search_details/' }}">Поиск<span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{% url 'new_book' %}">Создать<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{{ '/update_book/' }}">Изменить<span class="sr-only">(current)</span></a>
+            <li class="nav-item active" >
+              <a class="nav-link" href="{% url 'search_details' %}">Поиск<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{{ '/new_book/' }}">Создать<span class="sr-only">(current)</span></a>
-            </li>
-            
           </ul>
           <form method="post" action="/search/" class="d-flex">
             {% csrf_token %}
@@ -46,7 +43,8 @@
         </div>
       </nav>
     </div>
-
+  </header>
+  <body>
     <div class="container">
       <h2 style="text-align: center;">{{ block_name }}</h2>
     </div>
@@ -62,23 +60,30 @@
             {% for book in chunked_books %}
               <div class="col">
                 <div class="card mb-3" style="max-width: 540px;">
-                  <div class="row no-gutters">
+                  <div class="row no-gutters" style="height: 280px;">
                     <div class="col-md-4">
                       <a href="{% url 'books' book_id=book.pk %}">
-                        <img src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
+                        {% if book.cover %}
+                          <img style="max-height: 280px;" src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
+                        {%  else %}
+                          <img style="max-height: 280px;" src="{% static 'default_cover.jpeg' %}" class="card-img" alt="Оболожка книги">
+                        {% endif %}
                       </a>
                     </div>
                     <div class="col-md-8">
                       <div class="card-body">
                         <h5 class="card-title">{{ book.title }}</h5>
-                        <p class="card-text">{{ book.author.fullname }}</p>
+                        <p class="card-text">
+                          <a href="{% url 'authors' author_id=book.author.id %}" style="text-decoration:none; color:inherit;">{{ book.author.fullname }}</a>
+                        </p>
                         {% for genre in book.genres.all %}
                           <a href="{% url 'genres' genre_id=genre.pk %}"class="badge badge-secondary">{{ genre.name }}</a>
                         {% endfor %}
                         <br><br>
-                        <p><ins>Рейтинг {{ book.rating }}</ins></p>
-                        <div class="pt-1">
-                          <a href="{{ book.text.url }}" target="_blank">Читать онлайн</a>
+                        <p class="card-text">Рейтинг: {{ book.rating }}/10</p>
+                        <div class="card-text">
+                          <a href="{% url 'reader' book_id=book.pk %}" target="_blank">Читать онлайн</a>
+                        </div>
                       </div>
                     </div>
                   </div>

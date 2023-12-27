@@ -23,7 +23,7 @@ from django.urls import path
 from books.views import (authors_view, book_view,
                          books_by_author_view, books_by_genre_view, books_view,
                          genres_view, search_view, search_details_view, create_book_view,
-                         update_book_view)
+                         update_book_view, show_txt_file)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -34,15 +34,14 @@ urlpatterns = [
     path('authors/<int:author_id>', books_by_author_view, name='authors'),
     path('genres/<int:genre_id>', books_by_genre_view, name='genres'),
     path('search/', search_view),
-    path('search_details//', search_details_view),
-    path('new_book/', create_book_view),
-    path('update_book/<int:book_id>', update_book_view),
+    path('search_details/', search_details_view, name='search_details'),
+    path('books/new_book/', create_book_view, name='new_book'),
+    path('books/<int:book_id>/update', update_book_view, name='update_book'),
+    path('books/<int:book_id>/reader/', show_txt_file, name='reader'),
+    
 ]
 
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
     )
-    # urlpatterns += patterns('',
-    #     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-    #     'document_root': settings.MEDIA_ROOT}))
