@@ -1,0 +1,12 @@
+{% extends 'books.html' %}
+{% block content %}
+    <div class="container">
+			<h4>
+        {% for genre in genres %}
+					<a href="{% url 'genres' genre_id=genre.pk %}" class="badge badge-pill badge-secondary">{{ genre.name }} ({{ genre.num_books }})</a>
+				{% endfor %}
+			</h4>
+		<br>
+    </div>
+
+{% endblock content %}

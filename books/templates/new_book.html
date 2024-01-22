@@ -1,0 +1,21 @@
+{% extends 'books.html' %}
+
+{% block content %}
+	<div class="container">
+		<div class="card mb-3" style="width:60%; margin:auto;">
+			<div class="row no-gutters">
+					<div class="card-body">
+
+						<form method="post" enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="form-group">
+								{{ form.as_p }}
+								<button type="submit" class="btn btn-outline-primary">Сохранить</button>
+							</div>
+						</form>
+						
+					</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

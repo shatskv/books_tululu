@@ -1,0 +1,50 @@
+{% extends 'books.html' %}
+{% load static %}
+{% block content %}
+	<div class="container">
+		<div class="card mb-3" style="width:85%; margin:auto;">
+			<div class="row no-gutters">
+				<div class="col-md-4">
+					<a href="{% url 'books' book_id=book.pk %}">
+						{% if book.cover %}
+							<img src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
+						{% else %}
+							<img src="{% static 'default_cover.jpeg' %}" class="card-img" alt="Оболожка книги">
+						{% endif %}
+					</a>
+				</div>
+				<div class="col-md-8">
+					<div class="card-body">
+
+						<h5 class="card-title">Название: {{ book.title }}</h5>
+						<p class="card-text">Автор: <a href="{% url 'authors' author_id=book.author.id %}"
+							\
+							 style="text-decoration:none; color:inherit;">{{ book.author.fullname }}</a>
+						</p>
+
+						<div class="row">
+							<div class="col-md-3">Жанры:</div>
+							
+							<div class="col-md-9" style="text-align: left;">
+								{% for genre in book.genres.all %}
+									<a href="{% url 'genres' genre_id=genre.pk %}"class="badge badge-secondary">{{ genre.name }}</a>
+								{% endfor %}
+							</div>
+
+						</div>
+						<br>
+						<p class="card-text">Год публикации: {{ book.year_published }}</p>
+						<p class="card-text">Рейтинг: {{ book.rating }}</p>
+						<p class="card-text">Описание: {{ book.description }}</p>
+						<div class="card-text">
+							<a href="{% url 'reader' book_id=book.pk %}" target="_blank">Читать онлайн</a>
+						</div>
+						<div class="card-text">
+							<a href="{% url 'update_book' book_id=book.pk %}">Изменить</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
