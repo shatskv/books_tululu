@@ -6,3 +6,4 @@ pathvalidate==2.5.0
 lxml==4.9.0
 more-itertools==10.1.0
 Pillow==10.1.0
+Faker==22.5.0

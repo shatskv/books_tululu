@@ -28,6 +28,7 @@ from books.views import (authors_view, book_view,
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('books/', books_view),
+    path('', books_view),
     path('books/<int:book_id>', book_view, name='books'),
     path('authors/', authors_view),
     path('genres/', genres_view),

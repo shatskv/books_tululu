@@ -163,6 +163,8 @@ def show_txt_file(request, book_id: int):
     return render(request, 'reader.html', {'block_name': block_name, 'text': text})
 
 
+
+
 def update_book_view(request, book_id: int):
     book = get_object_or_404(Book, pk=book_id)
     if request.method == 'POST':

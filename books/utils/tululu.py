@@ -9,7 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 
-logger = logging.getLogger('tululu')
+logger = logging.getLogger(__name__)
 
 def check_response(response):
     response.raise_for_status()
