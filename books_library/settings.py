@@ -79,14 +79,24 @@ MEDIA_URL = '/media/'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-BOOKS_DIR = os.path.join(BASE_DIR, 'books_downloads')
+BOOKS_DIR = os.path.join(BASE_DIR, '.data')
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql_psycopg2',
+           'NAME': 'ysach',
+           'USER': 'postgres',
+           'HOST': 'localhost',
+       }
+   }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -137,20 +147,8 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'django_file': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'django', 'debug_django.log'),
-            'maxBytes': 1024*1024,
-            'backupCount': 3,
-            'formatter': 'verbose',
-        },
-        'tululu_file': {
-            'level': 'WARNING',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'tululu', 'tululu.log'),
-            'maxBytes': 1024*1024,
-            'backupCount': 3,
+        'console': {
+            'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
     },
@@ -161,17 +159,17 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['django_file'],
+        'handlers': ['console'],
         'level': 'DEBUG',
     },
     'loggers': {
         'django': {
-            'handlers': ['django_file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'tululu': {
-            'handlers': ['tululu_file'],
+            'handlers': ['console'],
             'level': 'WARNING',
             'propagate': False,
         },

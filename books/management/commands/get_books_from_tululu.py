@@ -11,11 +11,10 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from books.management.commands._tululu import (check_for_redirect,
-                                               check_response, download_image,
-                                               download_txt, parse_book_page)
+from books.utils.tululu import (check_for_redirect, check_response,
+                                download_image, download_txt, parse_book_page)
 
-logger = logging.getLogger('tululu')
+logger = logging.getLogger(__name__)
 JSON_PATH = 'books.json'
 
 def parse_terminal_args(options):
@@ -31,10 +30,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         help = 'Задайте диапазон страниц для скачивания книг:'
-        parser.add_argument('-s', '--start_page', help="Начальная страница", type=int, default=1)
-        parser.add_argument('-e', '--end_page', help="Конечная страница", type=int, default=10)
-        parser.add_argument('-si', '--skip_imgs', help="Не загружать обложки книг", action='store_true')
-        parser.add_argument('-st', '--skip_txt', help="Не загружать тексты книг", action='store_true')
+        parser.add_argument('--start_page', help="Начальная страница", type=int, default=1)
+        parser.add_argument('--end_page', help="Конечная страница", type=int, default=10)
+        parser.add_argument('--skip_imgs', help="Не загружать обложки книг", action='store_true')
+        parser.add_argument('--skip_txt', help="Не загружать тексты книг", action='store_true')
     
     def handle(self, *args: Any, **options: Any) -> str | None:
         terminal_args = parse_terminal_args(options)

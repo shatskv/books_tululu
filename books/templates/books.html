@@ -1,105 +1,50 @@
-<!doctype html>
-<html lang="ru">
+{% extends 'base.html' %}
 {% load static %}
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
-		<link rel="shortcut icon" href="{% static 'favicon.ico' %}">
-    <title>Библиотека книг</title>
-  </head>
-  
-  <header class="header_area">
-    <br>
-    <div class="container">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ '/books/' }}">Все книги</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarScroll">
-          <ul class="navbar-nav mr-auto my-2 my-lg-0 navbar-nav-scroll" style="max-height: 100px;">
-            <li class="nav-item active">
-              <a class="nav-link" href="{{ '/authors/' }}">Авторы<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{{ '/genres/' }}">Жанры<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'new_book' %}">Создать<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active" >
-              <a class="nav-link" href="{% url 'search_details' %}">Поиск<span class="sr-only">(current)</span></a>
-            </li>
-          </ul>
-          <form method="post" action="/search/" class="d-flex">
-            {% csrf_token %}
-            <input class="form-control mr-2" type="search" placeholder="Поиск" aria-label="Search" name="search_field">
-            <button class="btn btn-outline-success" type="submit">Поиск</button>
-          </form>
-        </div>
-      </nav>
-    </div>
-  </header>
-  <body>
-    <div class="container">
-      <h2 style="text-align: center;">{{ block_name }}</h2>
-    </div>
-    {% if page.paginator.num_pages > 1 %}
-      {% block paginator %}
-      {% endblock paginator %}
-    {% endif %}
-
-    {% block content %}
-      <div class="container">
-        <div class="row">
-          {% for chunked_books in page.object_list%}
-            {% for book in chunked_books %}
-              <div class="col">
-                <div class="card mb-3" style="max-width: 540px;">
-                  <div class="row no-gutters" style="height: 280px;">
-                    <div class="col-md-4">
-                      <a href="{% url 'books' book_id=book.pk %}">
-                        {% if book.cover %}
-                          <img style="max-height: 280px;" src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
-                        {%  else %}
-                          <img style="max-height: 280px;" src="{% static 'default_cover.jpeg' %}" class="card-img" alt="Оболожка книги">
-                        {% endif %}
-                      </a>
-                    </div>
-                    <div class="col-md-8">
-                      <div class="card-body">
-                        <h5 class="card-title">{{ book.title }}</h5>
-                        <p class="card-text">
-                          <a href="{% url 'authors' author_id=book.author.id %}" style="text-decoration:none; color:inherit;">{{ book.author.fullname }}</a>
-                        </p>
-                        {% for genre in book.genres.all %}
-                          <a href="{% url 'genres' genre_id=genre.pk %}"class="badge badge-secondary">{{ genre.name }}</a>
-                        {% endfor %}
-                        <br><br>
-                        <p class="card-text">Рейтинг: {{ book.rating }}/10</p>
-                        <div class="card-text">
-                          <a href="{% url 'reader' book_id=book.pk %}" target="_blank">Читать онлайн</a>
-                        </div>
-                      </div>
+{% block content %}
+  {% if page.paginator.num_pages > 1 %}
+    {% block paginator %}
+    {% endblock paginator %}
+  {% endif %}
+  <div class="container">
+    <div class="row">
+      {% for chunked_books in page.object_list%}
+        {% for book in chunked_books %}
+          <div class="col">
+            <div class="card mb-3" style="max-width: 540px;">
+              <div class="row no-gutters" style="height: 280px;">
+                <div class="col-md-4">
+                  <a href="{% url 'books' book_id=book.pk %}">
+                    {% if book.cover %}
+                      <img style="max-height: 280px;" src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
+                    {%  else %}
+                      <img style="max-height: 280px;" src="{% static 'default_cover.jpeg' %}" class="card-img" alt="Оболожка книги">
+                    {% endif %}
+                  </a>
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text">
+                      <a href="{% url 'authors' author_id=book.author.id %}" style="text-decoration:none; color:inherit;">{{ book.author.fullname }}</a>
+                    </p>
+                    {% for genre in book.genres.all %}
+                      <a href="{% url 'genres' genre_id=genre.pk %}"class="badge badge-secondary">{{ genre.name }}</a>
+                    {% endfor %}
+                    <br><br>
+                    <p class="card-text">Рейтинг: {{ book.rating }}/10</p>
+                    <div class="card-text">
+                      <a href="{% url 'reader' book_id=book.pk %}" target="_blank">Читать онлайн</a>
                     </div>
                   </div>
                 </div>
               </div>
-            {% endfor %}
-            <div class="w-100"></div>
-          {% endfor %}
-        </div>
-        
-      </div>
-    {% endblock %}
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="{% static 'jquery-3.3.1.slim.min.js' %}"></script>
-    <script src="{% static 'popper.min.js' %}"></script>
-    <script src="{% static 'bootstrap.min.js' %}"></script>
-  </body>
-</html>
+            </div>
+          </div>
+        {% endfor %}
+        <div class="w-100"></div>
+      {% endfor %}
+    </div>
+    
+  </div>
+{% endblock %}
+

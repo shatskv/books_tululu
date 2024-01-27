@@ -162,3 +162,6 @@ media/
 *.log.[0-9]*
 logs/
 books_downloads/
+.data/books/
+.DS_Store
+.data/
