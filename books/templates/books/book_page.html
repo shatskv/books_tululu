@@ -1,4 +1,4 @@
-{% extends 'books.html' %}
+{% extends 'books/books.html' %}
 {% load static %}
 {% block content %}
 	<div class="container">
@@ -39,9 +39,11 @@
 						<div class="card-text">
 							<a href="{% url 'reader' book_id=book.pk %}" target="_blank">Читать онлайн</a>
 						</div>
-						<div class="card-text">
-							<a href="{% url 'update_book' book_id=book.pk %}">Изменить</a>
-						</div>
+						{% if user.is_staff %}
+							<div class="card-text">
+								<a href="{% url 'update_book' book_id=book.pk %}">Изменить</a>
+							</div>
+						{% endif %}
 					</div>
 				</div>
 			</div>

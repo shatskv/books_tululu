@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="ru">
 {% load static %}
+{% load my_tags %}
+
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -28,12 +30,29 @@
             <li class="nav-item active">
               <a class="nav-link" href="{{ '/genres/' }}">Жанры<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'new_book' %}">Создать<span class="sr-only">(current)</span></a>
-            </li>
+            {% if user.is_staff %}
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'new_book' %}">Создать<span class="sr-only">(current)</span></a>
+              </li>
+            {% endif %}
             <li class="nav-item active" >
               <a class="nav-link" href="{% url 'search_details' %}">Поиск<span class="sr-only">(current)</span></a>
             </li>
+            {% if user.is_authenticated  %}
+              <li class="nav-item active" >
+                <a class="nav-link" href="{% url 'profile' %}">Профиль<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active" >
+                <a class="nav-link" href="{% url 'logout' %}">Выйти<span class="sr-only">(current)</span></a>
+              </li>
+            {% else %}
+              <li class="nav-item active" >
+                <a class="nav-link" href="{% url 'login' %}">Войти<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active" >
+                <a class="nav-link" href="{% url 'register' %}">Регистрация<span class="sr-only">(current)</span></a>
+              </li>
+            {% endif %}
             <li class="nav-item active" style="max-width: 220px;" >
               <form method="post" action="/search/" class="d-flex">
                 {% csrf_token %}
@@ -52,7 +71,43 @@
     <div class="container">
       <h2 style="text-align: center;">{{ block_name }}</h2>
     </div>
-
+   
+    {% if page.paginator.num_pages > 1 %}
+      <nav aria-label="page navigation">
+        <ul class="pagination justify-content-center">
+          {% if not page.has_previous %}
+            <li class="page-item disabled">
+              <a class="page-link" tabindex="-1" aria-disabled="true">Назад</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page.previous_page_number }}" tabindex="-1" aria-disabled="true">Назад</a>
+            </li>
+          {% endif %}
+          {% get_page_range page 8 as page_range %}
+          {% for page_num in page_range %}
+            {% if page_num != page.number %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
+            {% else %}
+              <li class="page-item active" aria-current="page">
+                <a class="page-link" href="?=page{{ page_num }}"> {{ page.number }} <span class="sr-only">(current)</span></a>
+              </li>
+            {% endif %}
+          {% endfor %}
+          {% if not page.has_next %}
+            <li class="page-item disabled">
+              <a class="page-link disabled">Вперед</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link"  href="?page={{ page.next_page_number }}">Вперед</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+      
+    {% endif %}
+    
     {% block content %}
     {% endblock %}
 

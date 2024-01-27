@@ -1,6 +1,7 @@
 
 
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Author(models.Model):
@@ -31,3 +32,24 @@ class Book(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return f'Book {self.title} year: {self.year_published}, rating: {self.rating}'
+
+
+class BookProgress(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reading_books')
+    page = models.PositiveIntegerField(null=True, blank=True)
+    num_pages = models.PositiveIntegerField(null=True, blank=True)
+
+
+    @property
+    def progress(self):
+        percentage = 0
+        if self.page is not None and self.num_pages is not None:
+            book_progress = self.page / self.num_pages if self.num_pages else 0
+            print(self.page, self.num_pages)
+            percentage = round(book_progress * 100)
+        return percentage
+
+
+    def __str__(self):
+        return f'Book {self.book.title} are reading by {self.user.username}, progress {self.progress}'

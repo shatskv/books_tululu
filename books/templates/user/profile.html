@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="container">
+		<div class="card mb-3" style="width:60%; margin:auto;">
+			<div class="row no-gutters">
+					<div class="card-body">
+							<h5 class="card-title">Username: {{ user.username }}</h5>
+							<p class="card-text">Имя: {{ user.first_name }}</p>
+							<p class="card-text">Фамилия: {{ user.last_name }}</p>
+							<p class="card-text">Email: {{ user.email }}</p>
+							<p class="card-text">Модератор: {% if user.is_staff %}✅{% else %}❌{% endif %}</p>
+							<p class="card-text">Админ: {% if user.is_superuser %}✅{% else %}❌{% endif %}</p>
+							{% if books_progress %}
+								<p class="card-text">Прогресс чтения книг:</p>
+								{% for book_progress in books_progress %}
+									<div class="card mb-3">
+										<div class="row no-gutters align-items-center">
+											<div class="col-md-5">
+												<a href="{% url 'books' book_id=book_progress.book.pk %}" class="text-decoration-none text-reset">
+													<h6 class="card-text pl-1">{{ book_progress.book.title }}</h6>
+												</a>
+											</div>
+											<div class="col-md-6">
+												<a href="{% url 'reader' book_id=book_progress.book.pk %}">
+													<div class="progress">
+														<div class="{% if book_progress.progress > 67 %}progress-bar bg-success{% elif book_progress.progress > 33 %}progress-bar bg-warning{% else %}progress-bar bg-danger{% endif %}" \
+														style="width: {{ book_progress.progress }}%" role="progressbar" aria-valuenow="{{ book_progress.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+													</div>
+												</a>
+											</div>
+
+											<div class="col-md-1" style="text-align: center !important;">
+												<a href="{% url 'delete_progress' progress_id=book_progress.pk %}" class="card-text">❌</a>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							{% endif %}
+					</div>
+			</div>
+		</div>
+	</div>	
+
+
+					
+
+{% endblock %}

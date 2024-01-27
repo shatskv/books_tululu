@@ -18,27 +18,38 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from books.views import (authors_view, book_view,
-                         books_by_author_view, books_by_genre_view, books_view,
-                         genres_view, search_view, search_details_view, create_book_view,
-                         update_book_view, show_txt_file)
+from books.views.books import (authors_view, book_view, books_by_author_view,
+                               books_by_genre_view, books_view, genres_view, home_view)
+from books.views.books_actions import (create_book_view, reader_book_view,
+                                       search_details_result_view,
+                                       search_details_view, search_view,
+                                       update_book_view)
+from books.views.user import (delete_book_progress, register_user_view,
+                              user_profile_view)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='user/login.html'), name='login'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(template_name='user/logout.html'), name='logout'),
+    path('accounts/register/', register_user_view, name='register'),
+    path('accounts/profile/', user_profile_view, name='profile'),
     path('books/', books_view),
-    path('', books_view),
+    path('books/progress/<int:progress_id>', delete_book_progress, name='delete_progress'),
+    path('', home_view),
     path('books/<int:book_id>', book_view, name='books'),
     path('authors/', authors_view),
     path('genres/', genres_view),
     path('authors/<int:author_id>', books_by_author_view, name='authors'),
     path('genres/<int:genre_id>', books_by_genre_view, name='genres'),
-    path('search/', search_view),
+    path('search/', search_view, name='search'),
     path('search_details/', search_details_view, name='search_details'),
+    path('search_details/result/', search_details_result_view, name='search_result'),
     path('books/new_book/', create_book_view, name='new_book'),
     path('books/<int:book_id>/update', update_book_view, name='update_book'),
-    path('books/<int:book_id>/reader/', show_txt_file, name='reader'),
+    path('books/<int:book_id>/reader/', reader_book_view, name='reader'),
     
 ]
 

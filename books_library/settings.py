@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
-    "books"
+    "books",
+    "crispy_forms",
+    "crispy_bootstrap4"
+
 ]
 
 MIDDLEWARE = [
@@ -80,13 +83,6 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 BOOKS_DIR = os.path.join(BASE_DIR, '.data')
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 
 DATABASES = {
        'default': {
@@ -143,6 +139,20 @@ STATIC_ROOT = ''
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+LOGIN_REDIRECT_URL = '/books/'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# Books template settings
+
+BOOKS_PER_PAGE = 20
+BOOKS_PER_ROW = 2
+ROWS_TEXT_PER_PAGE = 50
+MIN_RATING = 0
+MAX_RATING = 10
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -175,3 +185,4 @@ LOGGING = {
         },
     },
 }
+
