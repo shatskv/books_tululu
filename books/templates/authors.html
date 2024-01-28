@@ -1,12 +1,12 @@
-{% extends 'books/books.html' %}
-{% block content %}
-    <div class="container">
-			<h4>
-        {% for author in authors %}
-					<a href="{% url 'authors' author_id=author.pk %}" class="badge badge-pill badge-secondary">{{ author.fullname }} ({{ author.num_books }})</a>
-				{% endfor %}
-			</h4>
-		<br>
-    </div>
+{% extends 'base.html' %}
 
+{% block content %}
+	<div class="container">
+		<h4>
+			{% for author in authors %}
+				<a href="{% url 'authors' author_id=author.pk %}" class="badge badge-pill badge-secondary">{{ author.fullname }} ({{ author.num_books }})</a>
+			{% endfor %}
+		</h4>
+		<br>
+	</div>
 {% endblock content %}

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from more_itertools import chunked
 
 from books.models import Author, Book, Genre
@@ -47,6 +47,7 @@ def genres_view(request: HttpRequest):
     block_name = 'Жанры'
 
     return render(request, 'genres.html', {'genres': genre, 'block_name': block_name})
+
 
 @login_required
 def books_by_author_view(request: HttpRequest, author_id: int):

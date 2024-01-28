@@ -40,7 +40,6 @@ def search_details_view(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
-            print('form_post_is_valid')
             request.session['search_form'] = request.POST
             return redirect('search_result')
     else:

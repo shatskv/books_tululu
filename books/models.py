@@ -46,7 +46,6 @@ class BookProgress(models.Model):
         percentage = 0
         if self.page is not None and self.num_pages is not None:
             book_progress = self.page / self.num_pages if self.num_pages else 0
-            print(self.page, self.num_pages)
             percentage = round(book_progress * 100)
         return percentage
 
