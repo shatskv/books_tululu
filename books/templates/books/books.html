@@ -1,10 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'paginator.html' %}
+
 {% load static %}
+
 {% block content %}
-  {% if page.paginator.num_pages > 1 %}
-    {% block paginator %}
-    {% endblock paginator %}
-  {% endif %}
   <div class="container">
     <div class="row">
       {% for chunked_books in page.object_list%}
@@ -44,7 +42,6 @@
         <div class="w-100"></div>
       {% endfor %}
     </div>
-    
   </div>
 {% endblock %}
 

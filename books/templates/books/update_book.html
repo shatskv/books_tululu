@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
+
 {% load static %}
+
+{% load crispy_forms_tags %}
+
 {% block content %}
 	<div class="container">
 		<div class="card mb-3" style="width:95%; margin:auto;">
@@ -9,21 +13,21 @@
 						{% if book.cover %}
 							<img src="{{ book.cover.url | urlencode }}" class="card-img" alt="Оболожка книги">
 						{% else %}
-						<img src="{% static 'default_cover.jpeg' %}" class="card-img" alt="Оболожка книги">
+							<img src="{% static 'default_cover.jpeg' %}" class="card-img" alt="Оболожка книги">
 						{% endif %}
 					</a>
 				</div>
 				<div class="col-md-8">
 					<div class="card-body">
-						
+
 						<form method="post" enctype="multipart/form-data">
 							{% csrf_token %}
 							<div class="form-group">
-								{{ form.as_p }}
+								{{ form|crispy }}
 								<button type="submit" class="btn btn-outline-primary">Сохранить</button>
 							</div>
 						</form>
-						
+
 					</div>
 				</div>
 			</div>

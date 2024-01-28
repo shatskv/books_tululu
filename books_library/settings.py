@@ -21,6 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
+SECRET_KEY = os.getenv('SECRET_KEY')
 SECRET_KEY = "django-insecure-!4es#s+y*$6tr8$g83bqm_ee2nq#4810_&xg^)4j6lkv2aa&5&"
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -39,7 +41,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
-    "books"
+    "books",
+    "crispy_forms",
+    "crispy_bootstrap4"
+
 ]
 
 MIDDLEWARE = [
@@ -80,13 +85,6 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 BOOKS_DIR = os.path.join(BASE_DIR, '.data')
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 
 DATABASES = {
        'default': {
@@ -143,6 +141,20 @@ STATIC_ROOT = ''
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+LOGIN_REDIRECT_URL = '/books/'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# Books template settings
+
+BOOKS_PER_PAGE = 20
+BOOKS_PER_ROW = 2
+ROWS_TEXT_PER_PAGE = 50
+MIN_RATING = 0
+MAX_RATING = 10
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -165,7 +177,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'DEBUG' if DEBUG else 'ERROR',
             'propagate': False,
         },
         'tululu': {
@@ -175,3 +187,4 @@ LOGGING = {
         },
     },
 }
+

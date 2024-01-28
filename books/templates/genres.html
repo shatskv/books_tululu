@@ -1,4 +1,5 @@
-{% extends 'books.html' %}
+{% extends 'base.html' %}
+
 {% block content %}
     <div class="container">
 			<h4>
@@ -6,7 +7,6 @@
 					<a href="{% url 'genres' genre_id=genre.pk %}" class="badge badge-pill badge-secondary">{{ genre.name }} ({{ genre.num_books }})</a>
 				{% endfor %}
 			</h4>
-		<br>
+			<br>
     </div>
-
 {% endblock content %}

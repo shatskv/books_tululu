@@ -1,13 +1,15 @@
-{% extends 'base.html' %}
+{% extends 'paginator.html' %}
 
 {% block content %}
     <div class="container">
 			<div class="card mb-3" style="margin:auto;">
-				{% if text %}
-					<pre style="white-space: pre-wrap; word-wrap: break-word; padding: 10px;">{{ text }}</pre>
-				{% else %}
-					<h3 style="text-align: center;">Текст книги не найден!</h3>
-				{% endif %}
+				{% for text in page.object_list %}
+					{% if text %}
+						<pre style="white-space: pre-wrap; word-wrap: break-word; padding: 10px;">{{ text }}</pre>
+					{% else %}
+						<h3 style="text-align: center;">Текст книги не найден!</h3>
+					{% endif %}
+				{% endfor %}
 			</div>
     </div>
 {% endblock content %}
