@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,14 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.getenv('SECRET_KEY')
-SECRET_KEY = "django-insecure-!4es#s+y*$6tr8$g83bqm_ee2nq#4810_&xg^)4j6lkv2aa&5&"
+SECRET_KEY = os.getenv('SECRET_KEY', default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', False)
 
-ALLOWED_HOSTS = ['127.0.0.1']
-
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost').split(',')
 
 # Application definition
 
@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "books",
     "crispy_forms",
     "crispy_bootstrap4"
-
 ]
 
 MIDDLEWARE = [
@@ -87,13 +86,15 @@ MEDIA_URL = '/media/'
 BOOKS_DIR = os.path.join(BASE_DIR, '.data')
 
 DATABASES = {
-       'default': {
-           'ENGINE': 'django.db.backends.postgresql_psycopg2',
-           'NAME': 'ysach',
-           'USER': 'postgres',
-           'HOST': 'localhost',
-       }
-   }
+    'default': {
+        'ENGINE': "django.db.backends.postgresql",
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        "HOST": os.getenv('POSTGRES_HOST'),
+        "PORT": "5432",
+    }
+}
 
 
 # Password validation

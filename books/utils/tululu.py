@@ -3,6 +3,7 @@ import logging
 import os
 import time
 from pathlib import Path
+from typing import Any
 from urllib.parse import urljoin
 
 import requests
@@ -11,16 +12,16 @@ from pathvalidate import sanitize_filename
 
 logger = logging.getLogger(__name__)
 
-def check_response(response):
+def check_response(response: requests.Response) -> None:
     response.raise_for_status()
     check_for_redirect(response)
 
 
-def download_txt(url, filename, folder='books'):
+def download_txt(url: str, filename: str, folder: str='books') -> str:
     response = requests.get(url)
     check_response(response)
     Path(folder).mkdir(parents=True, exist_ok=True)
-    filename = sanitize_filename(filename)
+    filename = sanitize_filename(filename) # type: ignore[assignment]
     filepath = os.path.join(folder, filename)
 
     with open(filepath, 'wb') as file:
@@ -28,12 +29,12 @@ def download_txt(url, filename, folder='books'):
     return filepath
 
 
-def download_image(url, filename, folder='images'):
+def download_image(url: str, filename: str, folder: str='images') -> str:
     response = requests.get(url)
     response.raise_for_status()
     check_for_redirect(response)
     Path(folder).mkdir(parents=True, exist_ok=True)
-    filename = sanitize_filename(filename)
+    filename = sanitize_filename(filename) # type: ignore[assignment]
     filepath = os.path.join(folder, filename)
 
     with open(filepath, 'wb') as file:
@@ -41,12 +42,12 @@ def download_image(url, filename, folder='images'):
     return filepath
 
 
-def check_for_redirect(response):
+def check_for_redirect(response: requests.Response) -> None:
     if response.status_code == 302:
-        raise requests.HTTPError(f'code: 404, No book for this url')
+        raise requests.HTTPError('code: 404, No book for this url')
 
 
-def parse_args_from_terminal():
+def parse_args_from_terminal() -> tuple[int, int]:
     parser = argparse.ArgumentParser(
     description='Задайте диапазон скачивания книг:'
                 )
@@ -58,19 +59,19 @@ def parse_args_from_terminal():
     return book_start_id, book_end_id
 
 
-def parse_book_page(book_html):
+def parse_book_page(book_html: str) -> dict[str, Any]:
     page_soup = BeautifulSoup(book_html, 'lxml')
     selector = '#content h1'
-    name_and_author = page_soup.select_one(selector).text
+    name_and_author = page_soup.select_one(selector).text # type: ignore[union-attr]
 
     selector = "a[href^='/txt.php']"
     book_href = page_soup.select_one(selector)
 
-    selector = "#content table.d_book" 
+    selector = "#content table.d_book"
     description = page_soup.select(selector)[1].get_text()
 
     selector = ".bookimage img[src]"
-    image_route = page_soup.select_one(selector).get('src')
+    image_route = page_soup.select_one(selector).get('src') # type: ignore[union-attr]
 
     selector = "span.d_book a[href]"
     genres_hrefs = page_soup.select(selector)
@@ -81,20 +82,20 @@ def parse_book_page(book_html):
     comments = [comment_class.text for comment_class in comment_classes]
 
     book_route = book_href.get('href') if book_href else None
-    
+
     name, author = name_and_author.split('::')
     author = author.strip()
     name = name.strip()
     return {'name': name,
-            'author': author, 
+            'author': author,
             'book_route': book_route,
             'image_route': image_route,
-            'description': description, 
+            'description': description,
             'comments': comments,
             'genres': genres}
 
 
-def fetch_books(book_start_id=1, book_end_id=10):
+def fetch_books(book_start_id: int=1, book_end_id: int=10) -> None:
     url_book_template = 'https://tululu.org/b{}/'
     book_filename_template ='{}. {}.txt'
     books_folder='books/'
@@ -104,7 +105,7 @@ def fetch_books(book_start_id=1, book_end_id=10):
 
     for book_id in range(book_start_id, book_end_id + 1):
         url = url_book_template.format(book_id)
-       
+
         try:
             response = requests.get(url, allow_redirects=False)
             check_response(response)
@@ -140,7 +141,7 @@ def fetch_books(book_start_id=1, book_end_id=10):
             book_id_in_local_lib += 1
 
 
-def main():
+def main() -> None:
     book_start_id, book_end_id = parse_args_from_terminal()
     fetch_books(book_start_id=book_start_id, book_end_id=book_end_id)
 

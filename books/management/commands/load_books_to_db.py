@@ -2,22 +2,23 @@ import json
 import os
 from datetime import date, datetime, timedelta
 from random import randint
+from typing import Any
+
 from django.conf import settings
 from django.core.files import File
 from django.core.management.base import BaseCommand
 from faker import Faker
-from typing import Any
+
 from books.management.commands.get_books_from_tululu import JSON_PATH
-from books.models import Book, Author, Genre
+from books.models import Author, Book, Genre
 
-
-# JSON_PATH = 'books.json'
 MIN_DATE = date(1800, 1, 1)
 MAX_DATE = date(1980, 1, 1)
 
 class Command(BaseCommand):
-    help = 'Скачивает книги с сайта'
-    def handle(self, *args: Any, **options: Any) -> None:
+    help = 'Загружает скаченные книги в базу'
+
+    def handle(self, *args: list[Any], **options: dict[Any, Any]) -> None:
         load_books()
 
 
@@ -26,18 +27,16 @@ def normalize_fullname(author: str) -> str:
     fullname_parts = [part.strip().capitalize() for part in fullname_parts]
     return ' '.join(fullname_parts)
 
-def generate_birhdate_and_year_published():
+
+def generate_birhdate_and_year_published() -> tuple[datetime, int]:
     fake = Faker()
-    # days_between = (MAX_DATE - MIN_DATE).days
-    # random_number_of_days = randrange(days_between)
-    # birhdate = MIN_DATE + timedelta(days=random_number_of_days)
     birhdate = fake.date_between(start_date=MIN_DATE, end_date=MAX_DATE)
     date_published = birhdate + timedelta(days=365*randint(20, 50))
     year_published = min(date_published, datetime.now().date()).year
     return birhdate, year_published
 
 
-def load_books():
+def load_books() -> None:
 
     json_path = os.path.join(settings.BOOKS_DIR, JSON_PATH)
     with open(json_path, 'r') as file:
@@ -60,7 +59,7 @@ def load_books():
         author.birthdate = birtdate
         author.save()
         genres = [Genre.objects.get_or_create(name=genre_name)[0] for genre_name in genre_names]
-        
+
         with open(img_src, 'rb') as img_file, open(book_path, 'rb') as txt_file:
             book_obj = Book.objects.get_or_create(
                 title=title,

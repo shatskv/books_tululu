@@ -165,3 +165,5 @@ books_downloads/
 .data/books/
 .DS_Store
 .data/
+.ruff_cache
+.env2

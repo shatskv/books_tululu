@@ -52,7 +52,7 @@ class GenreForm(forms.ModelForm):
         labels = {
             'name': 'Название жанра'
             }
-        
+
 
 class SearchForm(forms.Form):
     title = forms.CharField(max_length=256, required=False)

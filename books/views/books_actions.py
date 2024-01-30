@@ -5,7 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from more_itertools import chunked
 
@@ -14,12 +14,12 @@ from books.models import Book, BookProgress
 
 
 @login_required
-def search_view(request: HttpRequest):
+def search_view(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.method == 'POST':
         search_value = request.POST.get('search_field', '').strip()
         request.session['search_value'] = search_value
-    
-    search_value = request.session.get('search_value')
+
+    search_value = request.session.get('search_value', '')
     if not search_value:
         return redirect('/books')
     books = Book.objects.filter(Q(title__icontains=search_value) | Q(author__fullname__icontains=search_value))
@@ -35,7 +35,7 @@ def search_view(request: HttpRequest):
 
 
 @login_required
-def search_details_view(request):
+def search_details_view(request: HttpRequest) -> HttpResponse:
     block_name = 'Детальный поиск'
     if request.method == 'POST':
         form = SearchForm(request.POST)
@@ -48,11 +48,11 @@ def search_details_view(request):
 
 
 @login_required
-def search_details_result_view(request: HttpRequest):
+def search_details_result_view(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     form = SearchForm(request.session.get('search_form'))
     if not request.session.get('search_form') or not form.is_valid():
         return redirect('search_details')
-    
+
     cd = form.cleaned_data
     title = cd.get('title')
     author = cd.get('author')
@@ -86,10 +86,10 @@ def search_details_result_view(request: HttpRequest):
     else:
         block_name = 'Книги по вашему запросу'
     return render(request, 'books/books.html', {'page': page, 'block_name': block_name})
-    
+
 
 @staff_member_required
-def create_book_view(request: HttpRequest):
+def create_book_view(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
         if form.is_valid():
@@ -102,7 +102,7 @@ def create_book_view(request: HttpRequest):
 
 
 @login_required
-def reader_book_view(request: HttpRequest, book_id: int):
+def reader_book_view(request: HttpRequest, book_id: int) -> HttpResponse:
     book = Book.objects.get(pk=book_id)
     if book.text:
         with open(book.text.path, 'r') as file:
@@ -110,29 +110,30 @@ def reader_book_view(request: HttpRequest, book_id: int):
     else:
         text = ''
     lines = text.splitlines(keepends=True)
-    chunks = ["".join(lines[i:i + settings.ROWS_TEXT_PER_PAGE]) for i in range(0, len(lines), settings.ROWS_TEXT_PER_PAGE)]
+    chunks = ["".join(lines[i:i + settings.ROWS_TEXT_PER_PAGE]) for i in range(0, len(lines),
+              settings.ROWS_TEXT_PER_PAGE)]
     paginator = Paginator(chunks, 1)
     page_number = request.GET.get('page')
-   
+
     if text:
         book_progress = BookProgress.objects.get_or_create(
             book=book,
             user=request.user
         )[0]
         page_number = book_progress.page if book_progress.page is not None \
-                      and page_number is None else page_number
+                      and page_number is None else page_number # type: ignore[assignment]
         book_progress.page = page_number
         book_progress.page = 1 if not page_number and paginator.num_pages == 1 else  book_progress.page
         book_progress.num_pages = paginator.num_pages
         book_progress.save()
-    page_number = 1 if page_number is None else page_number
+    page_number = 1 if page_number is None else page_number # type: ignore[assignment]
     page = paginator.get_page(page_number)
     block_name = f'Книга "{book.title}"'
     return render(request, 'reader.html', {'block_name': block_name, 'page': page})
 
 
 @staff_member_required
-def update_book_view(request: HttpRequest, book_id: int):
+def update_book_view(request: HttpRequest, book_id: int) -> HttpResponse | HttpResponseRedirect:
     book = get_object_or_404(Book, pk=book_id)
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
