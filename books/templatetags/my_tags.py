@@ -1,9 +1,10 @@
 from django import template
+from django.core.paginator import Page
 
 register = template.Library()
 
 @register.simple_tag
-def get_page_range(page, max_pages):
+def get_page_range(page: Page, max_pages: int) -> range:
     num_pages = page.paginator.num_pages
     page_number = page.number
 

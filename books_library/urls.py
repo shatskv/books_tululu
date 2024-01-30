@@ -22,7 +22,8 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from books.views.books import (authors_view, book_view, books_by_author_view,
-                               books_by_genre_view, books_view, genres_view, home_view)
+                               books_by_genre_view, books_view, genres_view,
+                               home_view)
 from books.views.books_actions import (create_book_view, reader_book_view,
                                        search_details_result_view,
                                        search_details_view, search_view,
@@ -50,7 +51,6 @@ urlpatterns = [
     path('books/new_book/', create_book_view, name='new_book'),
     path('books/<int:book_id>/update', update_book_view, name='update_book'),
     path('books/<int:book_id>/reader/', reader_book_view, name='reader'),
-    
 ]
 
 if settings.DEBUG:

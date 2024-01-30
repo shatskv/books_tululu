@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import time
+from argparse import ArgumentParser
 from itertools import count
 from typing import Any
 from urllib.parse import urljoin
@@ -17,41 +18,40 @@ from books.utils.tululu import (check_for_redirect, check_response,
 logger = logging.getLogger(__name__)
 JSON_PATH = 'books.json'
 
-def parse_terminal_args(options):
+def parse_terminal_args(options: dict[str, Any]) -> dict[str, Any]:
     return  {'start_page': options.get('start_page'),
              'end_page': options.get('end_page'),
              'skip_imgs': options.get('skip_imgs'),
              'skip_txt': options.get('skip_txt')
             }
-    
+
 
 class Command(BaseCommand):
-    help = 'Скачивает книги с сайта'
+    help = 'Скачивает книги с сайта\n'
 
-    def add_arguments(self, parser):
-        help = 'Задайте диапазон страниц для скачивания книг:'
+    def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument('--start_page', help="Начальная страница", type=int, default=1)
         parser.add_argument('--end_page', help="Конечная страница", type=int, default=10)
         parser.add_argument('--skip_imgs', help="Не загружать обложки книг", action='store_true')
         parser.add_argument('--skip_txt', help="Не загружать тексты книг", action='store_true')
-    
-    def handle(self, *args: Any, **options: Any) -> str | None:
+
+    def handle(self, *args: list, **options: dict[Any, Any]) -> None:
         terminal_args = parse_terminal_args(options)
         fetch_fantastic_books(**terminal_args)
 
 
-def get_book_urls_from_page(main_page_url, page_html):
+def get_book_urls_from_page(main_page_url: str, page_html: str) -> list[str]:
     page_soup = BeautifulSoup(page_html, 'lxml')
     selector = ".bookimage a"
     book_blocks = page_soup.select(selector)
-    book_urls = [urljoin(main_page_url, block.get('href')) for block in book_blocks]
-    return book_urls
+    book_urls = [urljoin(main_page_url, block.get('href')) for block in book_blocks] # type: ignore[type-var]
+    return book_urls # type: ignore[return-value]
 
 
-def fetch_fantastic_books(start_page=1, end_page=None, dest_folder=settings.BOOKS_DIR, json_path=JSON_PATH,
-                          skip_imgs=False, skip_txt=False):
+def fetch_fantastic_books(start_page: int=1, end_page: int | None=None, dest_folder: str=settings.BOOKS_DIR,
+                          json_path: str=JSON_PATH, skip_imgs: bool=False, skip_txt: bool=False) -> None:
     url_template = 'https://tululu.org/l55/{}'
-    
+
     books_folder = 'books'
     images_folder = 'images'
     image_filename_template = '{}.jpg'
@@ -73,11 +73,11 @@ def fetch_fantastic_books(start_page=1, end_page=None, dest_folder=settings.BOOK
         except requests.HTTPError as e:
             logger.error(f'url: {url} HTTP error: {e}')
             continue
-        
+
         try:
             check_for_redirect(response)
         except requests.HTTPError as e:
-            logger.error('code: 404, No more pages found')
+            logger.error(e)
             break
 
         page_book_urls = get_book_urls_from_page(url, response.text)
@@ -127,7 +127,7 @@ def fetch_fantastic_books(start_page=1, end_page=None, dest_folder=settings.BOOK
             'title': book_parsed['name'],
             'author': book_parsed['author'],
             'img_src': img_path,
-            'book_path': book_path, 
+            'book_path': book_path,
             'description': book_parsed['description'],
             'comments': book_parsed['comments'],
             'genres': book_parsed['genres']

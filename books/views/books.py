@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from more_itertools import chunked
 
@@ -12,7 +12,7 @@ from books.models import Author, Book, Genre
 
 
 @login_required
-def books_view(request):
+def books_view(request: HttpRequest) -> HttpResponse:
     books = Book.objects.all()
 
     chunked_books = list(chunked(books, settings.BOOKS_PER_ROW))
@@ -20,29 +20,29 @@ def books_view(request):
     page_number = request.GET.get('page', 1)
     page = paginator.get_page(page_number)
     block_name = 'Все книги'
-    
+
     return render(request, 'books/books.html', {'page': page, 'block_name': block_name})
 
 
 @login_required
-def book_view(request: HttpRequest, book_id: int):
+def book_view(request: HttpRequest, book_id: int) -> HttpResponse:
     book = Book.objects.get(pk=book_id)
     block_name = f'Книга {book.title}'
     return render(request, 'books/book_page.html', {'book': book, 'block_name': block_name})
 
 
-def home_view(request: HttpRequest):
+def home_view(request: HttpRequest) -> HttpResponseRedirect:
     return redirect('genres/')
 
 
-def authors_view(request: HttpRequest):
+def authors_view(request: HttpRequest) -> HttpResponse:
     authors = Author.objects.annotate(num_books=Count('books')).order_by('-num_books')
     block_name = 'Авторы'
 
     return render(request, 'authors.html', {'authors': authors, 'block_name': block_name})
 
 
-def genres_view(request: HttpRequest):
+def genres_view(request: HttpRequest) -> HttpResponse:
     genre = Genre.objects.annotate(num_books=Count('books')).order_by('-num_books')
     block_name = 'Жанры'
 
@@ -50,7 +50,7 @@ def genres_view(request: HttpRequest):
 
 
 @login_required
-def books_by_author_view(request: HttpRequest, author_id: int):
+def books_by_author_view(request: HttpRequest, author_id: int) -> HttpResponse:
     author = Author.objects.get(pk=author_id)
     books = author.books.all()
 
@@ -64,7 +64,7 @@ def books_by_author_view(request: HttpRequest, author_id: int):
 
 
 @login_required
-def books_by_genre_view(request: HttpRequest, genre_id: int):
+def books_by_genre_view(request: HttpRequest, genre_id: int) -> HttpResponse:
     genre = Genre.objects.get(pk=genre_id)
     books = genre.books.all()
     block_name = f'Жанр "{genre.name}"'
