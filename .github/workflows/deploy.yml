@@ -30,7 +30,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Copy docker-compose.yaml with tags
-        run: scp ./deploy/docker-compose.yaml deployuser@books-library:./
+        run: scp ./deploy/docker-compose.yaml deployuser@books-library.ru:/etc/book-project/
         
       - name: Pull image
         run: ssh deployuser@books-library "VERSION=${DOCKER_METADATA_OUTPUT_VERSION} docker compose pull"
