@@ -28,17 +28,17 @@ from books.views.books_actions import (create_book_view, reader_book_view,
                                        search_details_result_view,
                                        search_details_view, search_view,
                                        update_book_view)
-from books.views.user import (delete_book_progress, register_user_view,
-                              user_profile_view)
+from books.views.user import (delete_book_progress_view, register_user_view,
+                              user_profile_view, logout_view)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='user/login.html'), name='login'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(template_name='user/logout.html'), name='logout'),
+    path('accounts/logout/', logout_view, name='logout'),
     path('accounts/register/', register_user_view, name='register'),
     path('accounts/profile/', user_profile_view, name='profile'),
     path('books/', books_view),
-    path('books/progress/<int:progress_id>', delete_book_progress, name='delete_progress'),
+    path('books/progress/<int:progress_id>', delete_book_progress_view, name='delete_progress'),
     path('', home_view),
     path('books/<int:book_id>', book_view, name='books'),
     path('authors/', authors_view),

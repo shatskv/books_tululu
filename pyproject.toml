@@ -18,6 +18,7 @@ pillow = "10.1.0"
 faker = "22.5.0"
 crispy-bootstrap4 = "2023.1"
 psycopg2-binary = "^2.9.9"
+gunicorn = "^21.2.0"
 
 
 [tool.poetry.group.dev.dependencies]
