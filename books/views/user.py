@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.contrib.auth import logout
 
 from books.forms import UserRegistrationForm
 from books.models import BookProgress
@@ -14,10 +15,17 @@ def user_profile_view(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
-def delete_book_progress(request: HttpRequest, progress_id: int) -> HttpResponseRedirect:
+def delete_book_progress_view(request: HttpRequest, progress_id: int) -> HttpResponseRedirect:
     book_progress = BookProgress.objects.get(pk=progress_id)
     book_progress.delete()
     return redirect('profile')
+
+
+@login_required
+def logout_view(request: HttpRequest) -> HttpResponse:
+    logout(request)
+    block_name = 'Спасибо, что зашли на наш сайт!'
+    return render(request, 'base.html', {'block_name': block_name})
 
 
 def register_user_view(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:

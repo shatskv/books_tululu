@@ -1,0 +1,53 @@
+version: "2.4"
+services:
+  web:
+    image: ghcr.io/shatskv/books_tululu:${VERSION}
+    env_file:
+      - .env
+    restart: unless-stopped
+   
+    command: sh -c "python manage.py migrate &&
+                    python manage.py collectstatic &&
+                    gunicorn books_library.wsgi:application --bind 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+    
+  postgresdb:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - .data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  nginx:
+    image: nginx
+    restart: unless-stopped
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - web
+
+volumes:
+  static_volume:
+  media_volume:

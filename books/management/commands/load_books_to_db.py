@@ -38,7 +38,7 @@ def generate_birhdate_and_year_published() -> tuple[datetime, int]:
 
 def load_books() -> None:
 
-    json_path = os.path.join(settings.BOOKS_DIR, JSON_PATH)
+    json_path = os.path.join(settings.BOOKS_DIR, JSON_PATH) # type: ignore[misc]
     with open(json_path, 'r') as file:
         books_json = json.load(file)
 
