@@ -28,8 +28,8 @@ from books.views.books_actions import (create_book_view, reader_book_view,
                                        search_details_result_view,
                                        search_details_view, search_view,
                                        update_book_view)
-from books.views.user import (delete_book_progress_view, register_user_view,
-                              user_profile_view, logout_view)
+from books.views.user import (delete_book_progress_view, logout_view,
+                              register_user_view, user_profile_view)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

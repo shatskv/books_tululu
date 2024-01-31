@@ -3,7 +3,7 @@ FROM python:3.11-alpine
 WORKDIR /app
 
 RUN apk update && apk upgrade \
-    && apk add --no-cache gcc musl-dev libffi-dev openssl-dev libxml2-dev libxslt-dev \
+    && apk add --no-cache gcc musl-dev libffi-dev openssl-dev \
     && pip install --no-cache-dir -U pip setuptools wheel \
     && pip install --no-cache-dir -U poetry
 
