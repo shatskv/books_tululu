@@ -33,10 +33,10 @@ jobs:
         run: scp ./deploy/docker-compose.yaml deployuser@books-library.ru:/etc/books-project/docker-compose.yaml
         
       - name: Pull image
-        run: ssh deployuser@books-library "VERSION=${DOCKER_METADATA_OUTPUT_VERSION} docker compose pull"
+        run: ssh deployuser@books-library.ru "VERSION=${DOCKER_METADATA_OUTPUT_VERSION} docker compose pull"
         
       - name: Stop services
-        run: ssh deployuser@books-library "VERSION=${DOCKER_METADATA_OUTPUT_VERSION} docker compose stop web nginx"
+        run: ssh deployuser@books-library.ru "VERSION=${DOCKER_METADATA_OUTPUT_VERSION} docker compose stop web nginx"
         
       - name: Run servises
-        run: ssh deployuser@books-library "VERSION=${DOCKER_METADATA_OUTPUT_VERSION} docker compose up -d web nginx"
+        run: ssh deployuser@books-library.ru "VERSION=${DOCKER_METADATA_OUTPUT_VERSION} docker compose up -d web nginx"
