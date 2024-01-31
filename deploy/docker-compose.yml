@@ -1,7 +1,7 @@
 version: "2.4"
 services:
   web:
-    build: .
+    image: ghcr.io/shatskv/books_tululu:${VERSION}
     env_file:
       - .env
     restart: unless-stopped
@@ -32,6 +32,21 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  
+  nginx:
+    image: nginx
+    restart: unless-stopped
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - web
 
 volumes:
   static_volume:
