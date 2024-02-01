@@ -83,7 +83,7 @@ MEDIA_URL = '/media/'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# BOOKS_DIR = os.path.join(BASE_DIR, '.data')
+BOOKS_DIR = os.path.join(BASE_DIR, '.data')
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
