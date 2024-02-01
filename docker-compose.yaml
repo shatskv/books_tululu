@@ -7,12 +7,11 @@ services:
     restart: unless-stopped
    
     command: sh -c "python manage.py migrate &&
-                    python manage.py collectstatic &&
                     gunicorn books_library.wsgi:application --bind 0.0.0.0:8000"
     ports:
       - 8000:8000
     volumes:
-      - static_volume:/app/static
+      - static_volume:/app/staticfiles
       - media_volume:/app/media
     depends_on:
       postgresdb:
