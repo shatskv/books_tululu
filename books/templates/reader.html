@@ -3,13 +3,15 @@
 {% block content %}
     <div class="container">
 			<div class="card mb-3" style="margin:auto;">
-				{% for text in page.object_list %}
-					{% if text %}
-						<pre style="white-space: pre-wrap; word-wrap: break-word; padding: 10px;">{{ text }}</pre>
+					{% if page.object_list %}
+						{% for text in page.object_list %}
+							{% if text %}
+								<pre style="white-space: pre-wrap; word-wrap: break-word; padding: 10px;">{{ text }}</pre>
+							{% endif %}
+						{% endfor %}
 					{% else %}
 						<h3 style="text-align: center;">Текст книги не найден!</h3>
 					{% endif %}
-				{% endfor %}
 			</div>
     </div>
 {% endblock content %}

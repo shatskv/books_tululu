@@ -95,11 +95,16 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 target-version = 'py311'
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "books_library.settings"
+DJANGO_SETTINGS_MODULE = "tests.settings"
 python_files = ["test_*.py", "*_test.py", "testing/python/*.py", "test*.py"]
 addopts = [
     '--cov=books',
     '--cov-report=xml:coverage.xml',
     '--cov-branch',
-    '--cov-fail-under=2',
+    '--cov-fail-under=50',
     ]
+
+[tool.coverage.run]
+omit = [
+    "*/migrations/*",
+]

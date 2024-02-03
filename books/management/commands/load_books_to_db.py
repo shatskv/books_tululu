@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 from datetime import date, datetime, timedelta
 from random import randint
 from typing import Any
@@ -15,6 +16,7 @@ from books.models import Author, Book, Genre
 MIN_DATE = date(1800, 1, 1)
 MAX_DATE = date(1980, 1, 1)
 
+
 class Command(BaseCommand):
     help = 'Загружает скаченные книги в базу'
 
@@ -29,7 +31,7 @@ def normalize_fullname(author: str) -> str:
 
 
 def generate_birhdate_and_year_published() -> tuple[datetime, int]:
-    fake = Faker()
+    fake = Faker(['ru-RU'])
     birhdate = fake.date_between(start_date=MIN_DATE, end_date=MAX_DATE)
     date_published = birhdate + timedelta(days=365*randint(20, 50))
     year_published = min(date_published, datetime.now().date()).year
@@ -37,8 +39,7 @@ def generate_birhdate_and_year_published() -> tuple[datetime, int]:
 
 
 def load_books() -> None:
-
-    json_path = os.path.join(settings.BOOKS_DIR, JSON_PATH) # type: ignore[misc]
+    json_path = os.path.join(settings.BOOKS_DIR, JSON_PATH)
     with open(json_path, 'r') as file:
         books_json = json.load(file)
 
@@ -71,3 +72,5 @@ def load_books() -> None:
                 rating=rating
             )[0]
             book_obj.genres.set(genres)
+    shutil.rmtree(settings.BOOKS_DIR, ignore_errors=True)
+        
