@@ -30,6 +30,7 @@ class Book(models.Model):
     year_published = models.PositiveSmallIntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
     def __str__(self) -> str:
         return f'Book {self.title} year: {self.year_published}, rating: {self.rating}'
 

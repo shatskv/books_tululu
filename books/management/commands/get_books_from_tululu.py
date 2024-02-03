@@ -49,7 +49,7 @@ def get_book_urls_from_page(main_page_url: str, page_html: str) -> list[str]:
 
 
 def fetch_fantastic_books(start_page: int=1, end_page: int | None=None, dest_folder: 
-                          str=settings.BOOKS_DIR, # type: ignore[misc]
+                          str=settings.BOOKS_DIR,
                           json_path: str=JSON_PATH, skip_imgs: bool=False, skip_txt: bool=False) -> None:
     url_template = 'https://tululu.org/l55/{}'
 

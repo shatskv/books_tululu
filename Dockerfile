@@ -19,6 +19,3 @@ COPY books ./books
 COPY manage.py ./
 
 RUN python manage.py collectstatic --noinput
-# RUN python manage.py migrate 
-
-# CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "books_library.wsgi:application"]

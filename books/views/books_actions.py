@@ -18,7 +18,6 @@ def search_view(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if request.method == 'POST':
         search_value = request.POST.get('search_field', '').strip()
         request.session['search_value'] = search_value
-
     search_value = request.session.get('search_value', '')
     if not search_value:
         return redirect('/books')
@@ -104,6 +103,7 @@ def create_book_view(request: HttpRequest) -> HttpResponse | HttpResponseRedirec
 @login_required
 def reader_book_view(request: HttpRequest, book_id: int) -> HttpResponse:
     book = Book.objects.get(pk=book_id)
+    print(book.text)
     if book.text:
         with open(book.text.path, 'r') as file:
             text = file.read()
@@ -114,7 +114,7 @@ def reader_book_view(request: HttpRequest, book_id: int) -> HttpResponse:
               settings.ROWS_TEXT_PER_PAGE)]
     paginator = Paginator(chunks, 1)
     page_number = request.GET.get('page')
-
+    
     if text:
         book_progress = BookProgress.objects.get_or_create(
             book=book,

@@ -1,13 +1,14 @@
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
-from django.contrib.auth import logout
 
 from books.forms import UserRegistrationForm
 from books.models import BookProgress
 
 
 @login_required
+
 def user_profile_view(request: HttpRequest) -> HttpResponse:
     block_name = 'Профиль'
     books_progress = request.user.reading_books.all().order_by('book') # type: ignore

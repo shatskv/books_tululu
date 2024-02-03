@@ -34,7 +34,6 @@ class UserRegistrationForm(UserCreationForm):
         }
 
 
-
 class AuthorForm(forms.ModelForm):
     class Meta:
         model = Author
@@ -60,4 +59,4 @@ class SearchForm(forms.Form):
     description = forms.CharField(max_length=5000, required=False)
     genre = forms.CharField(max_length=256, required=False)
     rating_to = forms.FloatField(min_value=0, max_value=10, required=False, help_text='0.0')
-    rating_from = forms.FloatField(min_value=0, max_value=10, required=False)
+    rating_from = forms.FloatField(min_value=0, max_value=10, required=False,)

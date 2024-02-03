@@ -32,12 +32,12 @@ from books.views.user import (delete_book_progress_view, logout_view,
                               register_user_view, user_profile_view)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='user/login.html'), name='login'),
     path('accounts/logout/', logout_view, name='logout'),
     path('accounts/register/', register_user_view, name='register'),
     path('accounts/profile/', user_profile_view, name='profile'),
-    path('books/', books_view),
+    path('books/', books_view, name='all_books'),
     path('books/progress/<int:progress_id>', delete_book_progress_view, name='delete_progress'),
     path('', home_view),
     path('books/<int:book_id>', book_view, name='books'),
